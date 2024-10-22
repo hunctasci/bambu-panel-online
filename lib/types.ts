@@ -43,3 +43,12 @@ export interface UserType {
   username: string;
   password: string;
 }
+
+export interface CloudinaryResource {
+  context?: {
+    alt?: string;
+    caption?: string;
+  };
+  public_id: string;
+  secure_url: string;
+}

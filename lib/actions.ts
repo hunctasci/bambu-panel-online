@@ -6,12 +6,18 @@ import { redirect } from "next/navigation";
 import Employee from "@/models/Employee";
 import path from "path";
 import fs, { appendFile } from "fs/promises";
-import { v4 as uuidv4 } from "uuid";
 import { signIn } from "@/auth";
 import { signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
+import cloudinary from "./cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const addEmployer = async (formData: FormData) => {
   try {
@@ -129,27 +135,27 @@ export const addEmployee = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
     console.log("Form data extracted:", data);
 
-    const file = formData.get("photo") as File;
-    let photoPath = null;
+    const file = formData.get("image") as File;
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
 
-    if (file && file.name) {
-      console.log("File found:", file.name);
-      const fileBuffer = await file.arrayBuffer();
-      console.log("File buffer created");
+    // Upload the image to Cloudinary
+    const cloudinaryResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          { folder: "employees" }, // Optional: specify folder in Cloudinary
+          (error, result) => {
+            if (error) {
+              reject(error);
+              return;
+            }
+            resolve(result);
+          },
+        )
+        .end(buffer);
+    });
 
-      const uniqueFilename = `${uuidv4()}_${file.name}`;
-      const relativePath = `/uploads/${uniqueFilename}`;
-      const absolutePath = path.join(process.cwd(), "public", relativePath);
-
-      await fs.mkdir(path.dirname(absolutePath), { recursive: true });
-      await fs.writeFile(absolutePath, Buffer.from(fileBuffer));
-      console.log("File saved at:", absolutePath);
-
-      // Use the API route path instead of the direct file path
-      photoPath = `/api/public${relativePath}`;
-    } else {
-      console.log("No photo file found, skipping upload process");
-    }
+    const { public_id, secure_url } = cloudinaryResponse as any;
 
     const newEmployee = new Employee({
       firstName: data.firstName,
@@ -167,7 +173,10 @@ export const addEmployee = async (formData: FormData) => {
       residencyPermit: data.residencyPermit === "on",
       travelRestriction: data.travelRestriction === "on",
       notes: data.notes,
-      photo: photoPath, // This now points to the API route
+      image: {
+        publicId: public_id, // Store public_id from Cloudinary
+        url: secure_url, // Store secure URL from Cloudinary
+      }, // This now points to the API route
     });
 
     console.log("Saving employee to DB...");
@@ -209,7 +218,7 @@ export async function updateEmployee(formData: FormData) {
         const existingPhotoPath = path.join(
           process.cwd(),
           "public",
-          currentEmployee.photo.replace('/api/public', '')
+          currentEmployee.photo.replace("/api/public", ""),
         );
         await fs.unlink(existingPhotoPath).catch(console.error);
       }
@@ -308,7 +317,7 @@ export const authenticate = async (
     }
     throw error;
   }
-  redirect("/dashboard")
+  redirect("/dashboard");
 };
 
 export const registerUser = async ({

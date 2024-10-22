@@ -37,7 +37,16 @@ const EmployeeSchema = new Schema<EmployeeType>(
     residencyPermit: { type: Boolean }, // oturumIzni
     travelRestriction: { type: Boolean }, // seyahatKisitlamasi
     notes: { type: String }, // notlar
-    photo: { type: String }, // fotograf
+    image: {
+      publicId: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
   },
   { timestamps: true },
 );
