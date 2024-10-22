@@ -10,6 +10,13 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Bambu Danışmanlık",
+  description: "Yönetim Paneli",
+};
+
 const WelcomePage = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
