@@ -422,7 +422,7 @@ export default function EmployeeForm() {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="photo" // Ensure this matches your API expectation
           render={({ field }) => (
@@ -441,7 +441,7 @@ export default function EmployeeForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button type="submit" className="w-full md:w-auto">
           Gönder

@@ -429,7 +429,7 @@ export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="photo" // Ensure this matches your API expectation
           render={({ field }) => (
@@ -448,7 +448,7 @@ export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button type="submit" className="w-full md:w-auto">
           Güncelle
