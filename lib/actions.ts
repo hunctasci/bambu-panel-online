@@ -135,28 +135,6 @@ export const addEmployee = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
     console.log("Form data extracted:", data);
 
-    const file = formData.get("image") as File;
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
-
-    // Upload the image to Cloudinary
-    const cloudinaryResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          { folder: "employees" }, // Optional: specify folder in Cloudinary
-          (error, result) => {
-            if (error) {
-              reject(error);
-              return;
-            }
-            resolve(result);
-          },
-        )
-        .end(buffer);
-    });
-
-    const { public_id, secure_url } = cloudinaryResponse as any;
-
     const newEmployee = new Employee({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -173,10 +151,6 @@ export const addEmployee = async (formData: FormData) => {
       residencyPermit: data.residencyPermit === "on",
       travelRestriction: data.travelRestriction === "on",
       notes: data.notes,
-      image: {
-        publicId: public_id, // Store public_id from Cloudinary
-        url: secure_url, // Store secure URL from Cloudinary
-      }, // This now points to the API route
     });
 
     console.log("Saving employee to DB...");
@@ -208,31 +182,6 @@ export async function updateEmployee(formData: FormData) {
     const currentEmployee = await Employee.findById(id);
     if (!currentEmployee) {
       throw new Error("Employee not found");
-    }
-
-    // Handle photo upload
-    const photo = formData.get("photo") as File;
-    if (photo && photo.size > 0) {
-      // If there's an existing photo, delete it
-      if (currentEmployee.photo) {
-        const existingPhotoPath = path.join(
-          process.cwd(),
-          "public",
-          currentEmployee.photo.replace("/api/public", ""),
-        );
-        await fs.unlink(existingPhotoPath).catch(console.error);
-      }
-
-      // Upload the new photo
-      const fileName = `${Date.now()}_${photo.name}`;
-      const relativePath = `/uploads/${fileName}`;
-      const filePath = path.join(process.cwd(), "public", relativePath);
-      const arrayBuffer = await photo.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      await appendFile(filePath, buffer);
-
-      // Update the photo path in the data object to use the API route
-      data.photo = `/api/public${relativePath}`;
     }
 
     // Update the employee document, ensuring competencies is an array
@@ -273,18 +222,6 @@ export const deleteEmployee = async (formData: FormData) => {
 
     if (!employee) {
       throw new Error("Employee not found");
-    }
-
-    // If the employee has a photo, delete it from the filesystem
-    if (employee.photo) {
-      const absolutePath = path.join(process.cwd(), "public", employee.photo);
-      try {
-        await fs.unlink(absolutePath);
-        console.log("Employee photo deleted:", absolutePath);
-      } catch (fileErr) {
-        console.error("Error deleting employee photo:", fileErr);
-        // Optionally handle file deletion error
-      }
     }
 
     // Delete the employee from the database
