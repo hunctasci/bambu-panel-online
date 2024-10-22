@@ -2,7 +2,6 @@
 
 import { competencyOptions } from "@/models/Employee";
 import { EmployeeType } from "@/lib/types"; // Adjust the import path as needed
-import { CldImage } from "next/cloudinary";
 import { ReactNode } from "react";
 
 interface EmployeeDetailsProps {
@@ -23,16 +22,8 @@ const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
   return (
     <div className="overflow-hidden rounded-lg shadow-md">
       <div className="md:flex">
-        {/* CldImage Section */}
-        <div className="p-4 md:w-1/3">
-          <CldImage
-            src={employee.publicId || "/no-image.jpeg"}
-            alt="Employee"
-            className="h-auto w-full rounded-md object-cover"
-            width={300}
-            height={300}
-          />
-        </div>
+        {/* Image Section */}
+        <div className="p-4 md:w-1/3"></div>
 
         {/* Details Section */}
         <div className="p-6 md:w-2/3">

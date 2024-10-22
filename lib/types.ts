@@ -20,7 +20,7 @@ export interface EmployeeType {
   residencyPermit?: boolean; // Residency Permit
   travelRestriction?: boolean; // Travel Restriction
   notes?: string; // Notes
-  photo?: string | undefined; // Photo
+  image?: string | undefined; // Photo
 }
 
 export interface EmployerType {
