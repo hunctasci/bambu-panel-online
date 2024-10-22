@@ -4,8 +4,6 @@ import { connectToDB } from "./utils";
 import Employer from "@/models/Employer";
 import { redirect } from "next/navigation";
 import Employee from "@/models/Employee";
-import path from "path";
-import fs, { appendFile } from "fs/promises";
 import { signIn } from "@/auth";
 import { signOut } from "@/auth";
 import { AuthError } from "next-auth";
