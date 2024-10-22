@@ -40,11 +40,9 @@ const EmployeeSchema = new Schema<EmployeeType>(
     image: {
       publicId: {
         type: String,
-        required: true,
       },
       url: {
         type: String,
-        required: true,
       },
     },
   },
