@@ -30,7 +30,7 @@ export interface EmployerType {
   birthDate: Date; // Date of Birth
   address: string; // Address
   phoneNumber: string; // Telephone Number
-  placeType: "Müstakil" | "Dublex" | "Normal Daire"; // Place Type
+  placeType: "Müstakil" | "Dublex" | "Normal Daire" | "Villa"; // Place Type
   hasPets: boolean; // Has Pets
   healthCondition: string; // Health Condition
   children: string; // Children

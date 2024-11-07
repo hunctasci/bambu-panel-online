@@ -10,7 +10,7 @@ const EmployerSchema = new Schema<EmployerType>(
     phoneNumber: { type: String, required: true }, // telefonNumarasi
     placeType: {
       type: String,
-      enum: ["Müstakil", "Dublex", "Normal Daire"], // yerTipi
+      enum: ["Müstakil", "Dublex", "Normal Daire", "Villas"], // yerTipi
       required: true,
     },
     hasPets: { type: Boolean, default: false }, // evcilHayvan

@@ -35,7 +35,7 @@ const formSchema = z.object({
   ),
   address: z.string().min(5, { message: "Adres en az 5 karakter olmalı." }),
   phoneNumber: z.string().min(10, { message: "Telefon numarası geçersiz." }),
-  placeType: z.enum(["Müstakil", "Dublex", "Normal Daire"], {
+  placeType: z.enum(["Müstakil", "Dublex", "Normal Daire", "Villa"], {
     required_error: "Yer tipi seçiniz.",
   }),
   hasPets: z.boolean().default(false),
@@ -184,6 +184,7 @@ export default function EmployerForm() {
                     <SelectItem value="Müstakil">Müstakil</SelectItem>
                     <SelectItem value="Dublex">Dublex</SelectItem>
                     <SelectItem value="Normal Daire">Normal Daire</SelectItem>
+                    <SelectItem value="Normal Daire">Villa</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
