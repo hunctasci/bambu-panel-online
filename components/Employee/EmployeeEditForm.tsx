@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +26,7 @@ import {
 import { isValid, parse } from "date-fns";
 import { competencyOptions } from "@/models/Employee";
 import { updateEmployee } from "@/lib/actions";
+import { Textarea } from "../ui/textarea";
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -84,6 +86,8 @@ interface EmployeeEditFormProps {
 }
 
 export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<EmployeeFormData>({
     resolver: zodResolver(employeeFormSchema),
     defaultValues: {
@@ -131,13 +135,17 @@ export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
     });
 
     formData.append("id", employee._id);
+    setIsPending(true);
 
     try {
       console.log("Updating employee data:", Object.fromEntries(formData));
       await updateEmployee(formData);
+      setIsPending(false);
+
       console.log("Employee updated successfully");
     } catch (error) {
       console.error("Employee update error:", error);
+      setIsPending(false);
     }
   };
 
@@ -422,14 +430,14 @@ export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
             <FormItem>
               <FormLabel>Notlar</FormLabel>
               <FormControl>
-                <Input placeholder="Ek notlar" {...field} />
+                <Textarea placeholder="Ek notlar" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* <FormField
+         <FormField
           control={form.control}
           name="photo" // Ensure this matches your API expectation
           render={({ field }) => (
@@ -448,10 +456,10 @@ export default function EmployeeEditForm({ employee }: EmployeeEditFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        /> 
 
-        <Button type="submit" className="w-full md:w-auto">
-          Güncelle
+        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+          {isPending ? "Güncelleniyor..." : "Güncelle"}
         </Button>
       </form>
     </Form>

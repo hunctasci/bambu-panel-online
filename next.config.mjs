@@ -13,6 +13,9 @@ const nextConfig = {
   publicRuntimeConfig: {
     staticFolder: "/uploads",
   },
+  images: {
+    domains: ['res.cloudinary.com'],
+  },
 };
 
 export default nextConfig;

@@ -9,13 +9,38 @@ import { signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
-import cloudinary from "./cloudinary";
+
+import { v2 as cloudinary } from "cloudinary";
+
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+export async function uploadToCloudinary(file: File) {
+  try {
+    // Convert file to base64
+    const fileBuffer = await file.arrayBuffer();
+    const base64File = Buffer.from(fileBuffer).toString('base64');
+    const dataURI = `data:${file.type};base64,${base64File}`;
+    
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(dataURI, {
+      folder: 'employees', // Optional: organize uploads in folders
+    });
+    
+    return {
+      publicId: result.public_id,
+      url: result.secure_url
+    };
+  } catch (error) {
+    console.error('Error uploading to Cloudinary:', error);
+    throw new Error('Failed to upload image');
+  }
+}
+
 
 export const addEmployer = async (formData: FormData) => {
   try {
@@ -133,6 +158,14 @@ export const addEmployee = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
     console.log("Form data extracted:", data);
 
+    let imageData = null;
+
+    // Handle image upload if present
+    const photoFile = formData.get('photo') as File;
+    if (photoFile && photoFile.size > 0) {
+      imageData = await uploadToCloudinary(photoFile);
+    }
+
     const newEmployee = new Employee({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -149,6 +182,7 @@ export const addEmployee = async (formData: FormData) => {
       residencyPermit: data.residencyPermit === "on",
       travelRestriction: data.travelRestriction === "on",
       notes: data.notes,
+      image: imageData, // Add the Cloudinary image data
     });
 
     console.log("Saving employee to DB...");
@@ -182,10 +216,22 @@ export async function updateEmployee(formData: FormData) {
       throw new Error("Employee not found");
     }
 
+    const photoFile = formData.get('photo') as File;
+    let imageData = currentEmployee.image; // Keep existing image by default
+
+    if (photoFile && photoFile.size > 0) {
+      // Delete old image from Cloudinary if it exists
+      if (currentEmployee.image?.publicId) {
+        await cloudinary.uploader.destroy(currentEmployee.image.publicId);
+      }
+      // Upload new image
+      imageData = await uploadToCloudinary(photoFile);
+    }
+
     // Update the employee document, ensuring competencies is an array
     const updatedEmployee = await Employee.findByIdAndUpdate(
       id,
-      { ...data, competencies },
+      { ...data, competencies,image: imageData  },
       { new: true },
     );
 
@@ -220,6 +266,10 @@ export const deleteEmployee = async (formData: FormData) => {
 
     if (!employee) {
       throw new Error("Employee not found");
+    }
+
+    if (employee.image?.publicId) {
+      await cloudinary.uploader.destroy(employee.image.publicId);
     }
 
     // Delete the employee from the database

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { parse, isValid } from "date-fns";
 import { updateEmployer } from "@/lib/actions"; // We'll create this action
+import { Textarea } from "../ui/textarea";
 
 const employerFormSchema = z.object({
   firstName: z.string().min(2, { message: "Ad en az 2 karakter olmalı." }),
@@ -37,7 +39,7 @@ const employerFormSchema = z.object({
   ),
   address: z.string().min(5, { message: "Adres en az 5 karakter olmalı." }),
   phoneNumber: z.string().min(10, { message: "Telefon numarası geçersiz." }),
-  placeType: z.enum(["Müstakil", "Dublex", "Normal Daire"], {
+  placeType: z.enum(["Müstakil", "Dublex", "Normal Daire", "Villa"], {
     required_error: "Yer tipi seçiniz.",
   }),
   hasPets: z.boolean().default(false),
@@ -54,6 +56,8 @@ interface EmployerEditFormProps {
 }
 
 export default function EmployerEditForm({ employer }: EmployerEditFormProps) {
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<EmployerFormData>({
     resolver: zodResolver(employerFormSchema), // Assuming you have a Zod schema for employer form
     defaultValues: {
@@ -91,14 +95,18 @@ export default function EmployerEditForm({ employer }: EmployerEditFormProps) {
     });
 
     formData.append("id", employer._id);
+    setIsPending(true);
 
     try {
       console.log("Updating employer data:", Object.fromEntries(formData));
       await updateEmployer(formData);
       console.log("Employer updated successfully");
+      setIsPending(false);
+
       // Handle successful update (e.g., show success message, redirect)
     } catch (error) {
       console.error("Employer update error:", error);
+      setIsPending(false);
     }
     console.log("Final formData:", Object.fromEntries(formData.entries()));
   };
@@ -194,6 +202,7 @@ export default function EmployerEditForm({ employer }: EmployerEditFormProps) {
                     <SelectItem value="Müstakil">Müstakil</SelectItem>
                     <SelectItem value="Dublex">Dublex</SelectItem>
                     <SelectItem value="Normal Daire">Normal Daire</SelectItem>
+                    <SelectItem value="Normal Daire">Villa</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -293,15 +302,15 @@ export default function EmployerEditForm({ employer }: EmployerEditFormProps) {
             <FormItem>
               <FormLabel>Notlar</FormLabel>
               <FormControl>
-                <Input placeholder="Ek notlar" {...field} />
+                <Textarea placeholder="Ek notlar" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full md:w-auto">
-          Güncelle
+        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+          {isPending ? "Güncelleniyor..." : "Güncelle"}
         </Button>
       </form>
     </Form>
