@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
 import { addEmployer } from "@/lib/actions";
 import { z } from "zod";
 import { parse, isValid } from "date-fns";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   firstName: z.string().min(2, { message: "Ad en az 2 karakter olmalı." }),
@@ -48,6 +50,8 @@ const formSchema = z.object({
 type EmployerFormData = z.infer<typeof formSchema>;
 
 export default function EmployerForm() {
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<EmployerFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,10 +90,14 @@ export default function EmployerForm() {
 
   const onSubmit = async (data: EmployerFormData) => {
     const formData = transformFormData(data);
+    setIsPending(true);
+
     try {
       await addEmployer(formData);
+      setIsPending(false);
     } catch (error) {
       console.error("Form submission error:", error);
+      setIsPending(false);
     }
   };
 
@@ -184,7 +192,7 @@ export default function EmployerForm() {
                     <SelectItem value="Müstakil">Müstakil</SelectItem>
                     <SelectItem value="Dublex">Dublex</SelectItem>
                     <SelectItem value="Normal Daire">Normal Daire</SelectItem>
-                    <SelectItem value="Normal Daire">Villa</SelectItem>
+                    <SelectItem value="Villa">Villa</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -284,15 +292,15 @@ export default function EmployerForm() {
             <FormItem>
               <FormLabel>Notlar</FormLabel>
               <FormControl>
-                <Input placeholder="Ek notlar" {...field} />
+                <Textarea placeholder="Ek notlar" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full md:w-auto">
-          Gönder
+        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+          {isPending ? "Ekleniyor..." : "Ekle"}
         </Button>
       </form>
     </Form>

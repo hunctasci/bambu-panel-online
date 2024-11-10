@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,11 +26,21 @@ import {
 import { competencyOptions } from "@/models/Employee";
 import { addEmployee } from "@/lib/actions";
 import { employeeFormSchema } from "@/lib/Schemas/employeeFormSchema";
+import { Textarea } from "../ui/textarea";
 
 // Infer the schema type
 type EmployeeFormData = z.infer<typeof employeeFormSchema>;
 
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
 export default function EmployeeForm() {
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<EmployeeFormData>({
     resolver: zodResolver(employeeFormSchema),
     defaultValues: {
@@ -68,18 +79,24 @@ export default function EmployeeForm() {
 
           // Append file to FormData
           formData.append(key, file);
+          console.log(file)
         } else {
           formData.append(key, value.toString());
         }
       }
     });
+    setIsPending(true);
 
     try {
       console.log("Submitting form data:", Object.fromEntries(formData));
+      
       await addEmployee(formData);
+      setIsPending(false);
+
       console.log("Form submitted successfully");
     } catch (error) {
       console.error("Form submission error:", error);
+      setIsPending(false);
     }
   };
 
@@ -364,14 +381,14 @@ export default function EmployeeForm() {
             <FormItem>
               <FormLabel>Notlar</FormLabel>
               <FormControl>
-                <Input placeholder="Ek notlar" {...field} />
+                <Textarea placeholder="Ek notlar" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={form.control}
           name="photo" // Ensure this matches your API expectation
           render={({ field }) => (
@@ -390,10 +407,10 @@ export default function EmployeeForm() {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
-        <Button type="submit" className="w-full md:w-auto">
-          Gönder
+        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+          {isPending ? "Ekleniyor..." : "Ekle"}
         </Button>
       </form>
     </Form>

@@ -3,6 +3,7 @@
 import { competencyOptions } from "@/models/Employee";
 import { EmployeeType } from "@/lib/types"; // Adjust the import path as needed
 import { ReactNode } from "react";
+import Image from "next/image";
 
 interface EmployeeDetailsProps {
   employee: EmployeeType;
@@ -23,7 +24,10 @@ const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
     <div className="overflow-hidden rounded-lg shadow-md">
       <div className="md:flex">
         {/* Image Section */}
-        <div className="p-4 md:w-1/3"></div>
+        <div className="p-4 md:w-1/3">
+        <Image src={employee.image?.url  as string} width={300} height={300} alt="employee image"/>
+        
+        </div>
 
         {/* Details Section */}
         <div className="p-6 md:w-2/3">
