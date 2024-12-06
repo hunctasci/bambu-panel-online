@@ -12,7 +12,6 @@ import bcrypt from "bcrypt";
 
 import { v2 as cloudinary } from "cloudinary";
 
-
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -23,46 +22,48 @@ export async function uploadToCloudinary(file: File) {
   try {
     // Convert file to base64
     const fileBuffer = await file.arrayBuffer();
-    const base64File = Buffer.from(fileBuffer).toString('base64');
+    const base64File = Buffer.from(fileBuffer).toString("base64");
     const dataURI = `data:${file.type};base64,${base64File}`;
-    
+
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(dataURI, {
-      folder: 'employees', // Optional: organize uploads in folders
+      folder: "employees", // Optional: organize uploads in folders
     });
-    
+
     return {
       publicId: result.public_id,
-      url: result.secure_url
+      url: result.secure_url,
     };
   } catch (error) {
-    console.error('Error uploading to Cloudinary:', error);
-    throw new Error('Failed to upload image');
+    console.error("Error uploading to Cloudinary:", error);
+    throw new Error("Failed to upload image");
   }
 }
-
 
 export const addEmployer = async (formData: FormData) => {
   try {
     // Connect to the database
-    connectToDB();
+    await connectToDB(); // Ensure it's awaited for the DB connection
 
     // Extract and process form data
-    const data = Object.fromEntries(formData);
+    const data = Object.fromEntries(formData.entries()); // Convert FormData to an object
 
     // Create a new employer document with the provided form data
     const newEmployer = new Employer({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      birthDate: new Date(data.birthDate as string),
-      address: data.address,
-      phoneNumber: data.phoneNumber,
-      placeType: data.placeType,
-      hasPets: data.hasPets === "true",
-      healthCondition: data.healthCondition,
-      hasChildren: data.hasChildren,
-      weight: data.weight ? parseFloat(data.weight as string) : undefined,
-      notes: data.notes,
+      firstName: data.firstName || "", // first name
+      lastName: data.lastName || "", // last name
+      age: data.age || "", // age
+      placeType: data.placeType || "", // place type
+      occupation: data.occupation || "", // occupation
+      requestedJob: data.requestedJob || "", // requested job
+      childrenInfo: data.childrenInfo || "", // children info
+      petsInfo: data.petsInfo || "", // pets info (string)
+      healthCondition: data.healthCondition || "", // health condition
+      cleaningRequests: data.cleaningRequests || "", // cleaning requests
+      mealRequests: data.mealRequests || "", // meal requests
+      insuranceInterest: data.insuranceInterest || "", // insurance interest
+      budget: data.budget || "", // budget (string)
+      notes: data.notes || "", // notes
     });
 
     // Save the new employer document to the database
@@ -71,6 +72,8 @@ export const addEmployer = async (formData: FormData) => {
     console.log("Employer created successfully:", newEmployer);
 
     // Revalidate and redirect
+    revalidatePath("/dashboard/employers");
+    redirect("/dashboard/employers");
   } catch (err) {
     console.error("Error creating employer:", err);
 
@@ -83,8 +86,6 @@ export const addEmployer = async (formData: FormData) => {
       throw new Error("Failed to create employer!");
     }
   }
-  revalidatePath("/dashboard/employers");
-  redirect("/dashboard/employers");
 };
 
 export async function updateEmployer(formData: FormData) {
@@ -152,39 +153,43 @@ export const deleteEmployer = async (formData: FormData) => {
 
 export const addEmployee = async (formData: FormData) => {
   await connectToDB();
+
   try {
     console.log("Connected to DB");
 
+    // Extract form data
     const data = Object.fromEntries(formData.entries());
     console.log("Form data extracted:", data);
 
     let imageData = null;
 
     // Handle image upload if present
-    const photoFile = formData.get('photo') as File;
+    const photoFile = formData.get("image") as File; // Adjusted field name to "image"
     if (photoFile && photoFile.size > 0) {
       imageData = await uploadToCloudinary(photoFile);
     }
 
+    // Create new employee based on the form data
     const newEmployee = new Employee({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      birthDate: new Date(data.birthDate as string),
-      competencies: formData.getAll("competencies"),
-      address: data.address,
-      phoneNumber: data.phoneNumber,
-      maritalStatus: data.maritalStatus,
-      hasChildren: data.hasChildren === "on",
-      previousEmployers: data.previousEmployers,
-      references: data.references,
-      worksWithPets: data.worksWithPets === "on",
-      nationality: data.nationality,
-      residencyPermit: data.residencyPermit === "on",
-      travelRestriction: data.travelRestriction === "on",
-      notes: data.notes,
-      image: imageData, // Add the Cloudinary image data
+      firstName: data.firstName || "", // first name
+      lastName: data.lastName || "", // last name
+      age: data.age || "", // age
+      address: data.address || "", // address
+      phoneNumber: data.phoneNumber || "", // phone number
+      maritalStatus: data.maritalStatus || "", // marital status
+      smoking: data.smoking || "", // smoking usage
+      residencyPermit: data.residencyPermit || "", // residency permit
+      experience: data.experience || "", // experience
+      competencies: data.competencies || "", // competencies
+      references: data.references || "", // references
+      salaryExpectation: data.salaryExpectation || "", // salary expectation
+      residencyExpectation: data.residencyExpectation || "", // residency expectation
+      preferredDistrict: data.preferredDistrict || "", // preferred district
+      notes: data.notes || "", // notes
+      image: imageData ? imageData : "", // Image details
     });
 
+    // Save the new employee to the database
     console.log("Saving employee to DB...");
     await newEmployee.save();
 
@@ -193,6 +198,8 @@ export const addEmployee = async (formData: FormData) => {
     console.error("Error creating employee:", err);
     throw new Error("Failed to create employee!");
   }
+
+  // Trigger revalidation and redirect
   revalidatePath("/dashboard/employees");
   redirect("/dashboard/employees");
 };
@@ -202,9 +209,6 @@ export async function updateEmployee(formData: FormData) {
 
   // Convert FormData to a plain object
   const data = Object.fromEntries(formData.entries());
-
-  // Handle competencies separately as it needs to be an array
-  const competencies = formData.getAll("competencies");
 
   // Remove the id from the data object
   delete data.id;
@@ -216,7 +220,7 @@ export async function updateEmployee(formData: FormData) {
       throw new Error("Employee not found");
     }
 
-    const photoFile = formData.get('photo') as File;
+    const photoFile = formData.get("image") as File;
     let imageData = currentEmployee.image; // Keep existing image by default
 
     if (photoFile && photoFile.size > 0) {
@@ -231,7 +235,7 @@ export async function updateEmployee(formData: FormData) {
     // Update the employee document, ensuring competencies is an array
     const updatedEmployee = await Employee.findByIdAndUpdate(
       id,
-      { ...data, competencies,image: imageData  },
+      { ...data, image: imageData },
       { new: true },
     );
 

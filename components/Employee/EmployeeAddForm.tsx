@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
 import { useState } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,22 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { competencyOptions } from "@/models/Employee";
-import { addEmployee } from "@/lib/actions";
-import { employeeFormSchema } from "@/lib/Schemas/employeeFormSchema";
 import { Textarea } from "../ui/textarea";
-
-// Infer the schema type
-type EmployeeFormData = z.infer<typeof employeeFormSchema>;
+import { Input } from "@/components/ui/input";
+import { addEmployee } from "@/lib/actions";
 
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -41,61 +27,48 @@ const ACCEPTED_IMAGE_TYPES = [
 export default function EmployeeForm() {
   const [isPending, setIsPending] = useState(false);
 
-  const form = useForm<EmployeeFormData>({
-    resolver: zodResolver(employeeFormSchema),
+  const form = useForm({
     defaultValues: {
       firstName: "",
       lastName: "",
-      birthDate: "",
-      competencies: [],
+      age: "",
       address: "",
       phoneNumber: "",
-      maritalStatus: "Bekar",
-      hasChildren: false,
-      previousEmployers: "",
+      maritalStatus: "",
+      smoking: "",
+      residencyPermit: "",
+      experience: "",
+      competencies: "",
       references: "",
-      worksWithPets: false,
-      nationality: "",
-      residencyPermit: false,
-      travelRestriction: false,
+      salaryExpectation: "",
+      residencyExpectation: "",
+      preferredDistrict: "",
+      image: "",
       notes: "",
-      photo: undefined,
     },
   });
 
-  const onSubmit = async (data: EmployeeFormData) => {
+  const onSubmit = async (data: any) => {
+    setIsPending(true);
     const formData = new FormData();
 
+    // Append form fields to FormData
     Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined) {
-        if (key === "birthDate") {
-          const [day, month, year] = value.split(".");
-          formData.append(key, `${year}-${month}-${day}`);
-        } else if (Array.isArray(value)) {
-          value.forEach((item) => formData.append(key, item));
-        } else if (key === "photo" && value instanceof FileList) {
-          // Log file details
-          const file = value[0];
-
-          // Append file to FormData
-          formData.append(key, file);
-          console.log(file)
-        } else {
-          formData.append(key, value.toString());
-        }
+      if (key === "image" && value instanceof FileList) {
+        const file = value[0];
+        formData.append(key, file);
+        console.log(file);
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
       }
     });
-    setIsPending(true);
 
     try {
-      console.log("Submitting form data:", Object.fromEntries(formData));
-      
       await addEmployee(formData);
-      setIsPending(false);
-
-      console.log("Form submitted successfully");
+      console.log("Form submitted successfully:", Object.fromEntries(formData));
     } catch (error) {
       console.error("Form submission error:", error);
+    } finally {
       setIsPending(false);
     }
   };
@@ -103,304 +76,242 @@ export default function EmployeeForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ad</FormLabel>
-                <FormControl>
-                  <Input placeholder="Adınızı girin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Soyad</FormLabel>
-                <FormControl>
-                  <Input placeholder="Soyadınızı girin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="birthDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Doğum Tarihi</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="GG/AA/YYYY"
-                    {...field}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, "");
-                      if (value.length > 2 && value.length <= 4) {
-                        value = `${value.slice(0, 2)}.${value.slice(2)}`;
-                      } else if (value.length > 4) {
-                        value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
-                      }
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefon Numarası</FormLabel>
-                <FormControl>
-                  <Input placeholder="Telefon numaranızı girin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="maritalStatus"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Medeni Durum</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+        {/* Personal Information Section */}
+        <div className="grid grid-cols-1 gap-4">
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ad</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Medeni Durum Seçin" />
-                    </SelectTrigger>
+                    <Textarea placeholder="Ad girin" {...field} />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Evli">Evli</SelectItem>
-                    <SelectItem value="Bekar">Bekar</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Soyad</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Soyad girin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Yaş</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Yaş girin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Contact and Status Section */}
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adres</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Adres girin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefon Numarası</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Telefon Numarası girin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="maritalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Medeni Durum</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Medeni Durum girin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="smoking"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sigara Kullanımı</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Sigara kullanımı hakkında bilgi girin"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="residencyPermit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Oturma Izni</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Oturma Izni bilgisi girin"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="experience"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Deneyim</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Deneyiminiz hakkında bilgi girin"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="competencies"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Beceriler</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Becerileri girin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="references"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Referanslar</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Referanslari girin" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
+          {/* Professional Info Section */}
+
           <FormField
             control={form.control}
-            name="hasChildren"
+            name="salaryExpectation"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem>
+                <FormLabel>Ucret Beklentisi</FormLabel>
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Textarea placeholder="Ucret Beklentisi girin" {...field} />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Çocuk Sahibi mi?</FormLabel>
-                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="residencyExpectation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Oturum Beklentisi</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Oturum Beklentisi girin" {...field} />
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="competencies"
-          render={() => (
-            <FormItem>
-              <div className="mb-4">
-                <FormLabel className="text-base">Yeterlilik</FormLabel>
-              </div>
-              <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-                {competencyOptions.map((item) => (
-                  <FormField
-                    key={item.value}
-                    control={form.control}
-                    name="competencies"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item.value}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.value)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.value])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.value,
-                                      ),
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            {item.label}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Additional Info Section */}
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="preferredDistrict"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bolge Tercihi</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Bolge Tercihi girin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notlar</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Notlar girin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Special handling for the Image field */}
         <FormField
           control={form.control}
-          name="address"
+          name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Adres</FormLabel>
-              <FormControl>
-                <Input placeholder="Adresinizi girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="previousEmployers"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Önceki İşverenler</FormLabel>
-              <FormControl>
-                <Input placeholder="Önceki işverenlerinizi girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="references"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Referanslar</FormLabel>
-              <FormControl>
-                <Input placeholder="Referanslarınızı girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="worksWithPets"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Evcil Hayvan ile Çalışır Mı?</FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="nationality"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Uyruk</FormLabel>
-              <FormControl>
-                <Input placeholder="Uyruk" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="residencyPermit"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Oturum İzni Var mı?</FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="travelRestriction"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Seyahat Kısıtlaması Var mı?</FormLabel>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notlar</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Ek notlar" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="photo" // Ensure this matches your API expectation
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Fotoğraf (Opsiyonel)</FormLabel>
+              <FormLabel>Fotoğraf</FormLabel>
               <FormControl>
                 <Input
                   type="file"
                   accept={ACCEPTED_IMAGE_TYPES.join(",")}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    field.onChange(file ? e.target.files : undefined); // Handle optional field
+                    field.onChange(file ? e.target.files : ""); // Handle optional field
                   }}
                 />
               </FormControl>

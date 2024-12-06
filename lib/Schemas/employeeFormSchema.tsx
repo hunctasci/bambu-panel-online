@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { competencyOptions } from "@/models/Employee";
 import { isValid, parse } from "date-fns";
 
 const MAX_FILE_SIZE = 5000000;
@@ -20,11 +19,7 @@ export const employeeFormSchema = z.object({
     },
     { message: "Geçerli bir tarih giriniz (GG.AA.YYYY)" },
   ),
-  competencies: z
-    .array(
-      z.enum(competencyOptions.map((c) => c.value) as [string, ...string[]]),
-    )
-    .min(1, { message: "En az bir yeterlilik seçmelisiniz." }),
+
   address: z.string().min(5, { message: "Adres en az 5 karakter olmalı." }),
   phoneNumber: z.string().min(10, { message: "Telefon numarası geçersiz." }),
   maritalStatus: z.enum(["Evli", "Bekar"]),

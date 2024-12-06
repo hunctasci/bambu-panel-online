@@ -3,21 +3,20 @@ import { EmployerType } from "@/lib/types";
 
 const EmployerSchema = new Schema<EmployerType>(
   {
-    firstName: { type: String, required: true }, // ad
-    lastName: { type: String, required: true }, // soyad
-    birthDate: { type: Date, required: true }, // dogumTarihi
-    address: { type: String, required: true }, // adres
-    phoneNumber: { type: String, required: true }, // telefonNumarasi
-    placeType: {
-      type: String,
-      enum: ["Müstakil", "Dublex", "Normal Daire", "Villa"], // yerTipi
-      required: true,
-    },
-    hasPets: { type: Boolean, default: false }, // evcilHayvan
-    healthCondition: { type: String }, // saglikDurumu
-    children: { type: String }, // cocuklar
-    weight: { type: Number }, // kilo
-    notes: { type: String }, // notlar
+    firstName: { type: String }, // first name
+    lastName: { type: String }, // last name
+    age: { type: String }, // age
+    placeType: { type: String }, // place type
+    occupation: { type: String }, // occupation
+    requestedJob: { type: String }, // requested job
+    childrenInfo: { type: String }, // children info
+    petsInfo: { type: String }, // pets info (now string)
+    healthCondition: { type: String }, // health condition
+    cleaningRequests: { type: String }, // cleaning requests
+    mealRequests: { type: String }, // meal requests
+    insuranceInterest: { type: String }, // interest in insurance (now string)
+    budget: { type: String }, // budget (now string)
+    notes: { type: String }, // notes
   },
   { timestamps: true },
 );
@@ -25,4 +24,5 @@ const EmployerSchema = new Schema<EmployerType>(
 const Employer =
   mongoose.models?.Employer ||
   mongoose.model<EmployerType>("Employer", EmployerSchema);
+
 export default Employer;

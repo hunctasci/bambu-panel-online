@@ -1,44 +1,52 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type CompetencyOption = {
   value: string;
   label: string;
 };
 
 export interface EmployeeType {
-  _id?: string;
-  firstName: string; // Name
-  lastName: string; // Surname
-  birthDate: Date; // Date of Birth
-  competencies: string[]; // Competence (array of competency values)
-  address: string; // Address
-  phoneNumber: string; // Telephone Number
-  maritalStatus?: "Evli" | "Bekar"; // Marital Status
-  hasChildren: boolean; // Has Children
-  previousEmployers?: string; // Previous Employers
-  references?: string; // References
-  worksWithPets?: boolean; // Works With Pets
-  nationality?: string; // Nationality
-  residencyPermit?: boolean; // Residency Permit
-  travelRestriction?: boolean; // Travel Restriction
-  notes?: string; // Notes
+  _id: any;
+  firstName?: string; // first name
+  lastName?: string; // last name
+  age?: string; // age
+  address?: string; // address
+  phoneNumber?: string; // phone number
+  maritalStatus?: string; // marital status
+  smoking?: string; // smoking usage
+  residencyPermit?: string; // residency permit
+  experience?: string; // experience
+  competencies?: string; // skills
+  references?: string; // references
+  salaryExpectation?: string; // salary expectation
+  residencyExpectation?: string; // residency expectation
+  preferredDistrict?: string; // preferred district
   image?: {
-    publicId: string;
-    url: string;
-  };
+    publicId?: string; // image public ID
+    url?: string; // image URL
+  }; // image
+  notes?: string; // notes
+  createdAt?: Date; // timestamps (createdAt)
+  updatedAt?: Date; // timestamps (updatedAt)
 }
 
 export interface EmployerType {
-  _id?: string;
-  firstName: string; // Name
-  lastName: string; // Surname
-  birthDate: Date; // Date of Birth
-  address: string; // Address
-  phoneNumber: string; // Telephone Number
-  placeType: "Müstakil" | "Dublex" | "Normal Daire" | "Villa"; // Place Type
-  hasPets: boolean; // Has Pets
-  healthCondition: string; // Health Condition
-  children: string; // Children
-  weight: number; // Weight
-  notes: string; // Notes
+  _id: any;
+  firstName?: string; // first name
+  lastName?: string; // last name
+  age?: string; // age
+  placeType?: string; // place type
+  occupation?: string; // occupation
+  requestedJob?: string; // requested job
+  childrenInfo?: string; // children info
+  petsInfo?: string; // pets info (now string)
+  healthCondition?: string; // health condition
+  cleaningRequests?: string; // cleaning requests
+  mealRequests?: string; // meal requests
+  insuranceInterest?: string; // interest in insurance (now string)
+  budget?: string; // budget (now string)
+  notes?: string; // notes
+  createdAt?: Date; // timestamps (createdAt)
+  updatedAt?: Date; // timestamps (updatedAt)
 }
 
 export interface UserType {

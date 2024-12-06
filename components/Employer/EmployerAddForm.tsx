@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,84 +11,42 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { addEmployer } from "@/lib/actions";
-import { z } from "zod";
-import { parse, isValid } from "date-fns";
-import { Textarea } from "../ui/textarea";
-
-const formSchema = z.object({
-  firstName: z.string().min(2, { message: "Ad en az 2 karakter olmalı." }),
-  lastName: z.string().min(2, { message: "Soyad en az 2 karakter olmalı." }),
-  birthDate: z.string().refine(
-    (val) => {
-      const parsed = parse(val, "dd.MM.yyyy", new Date());
-      return isValid(parsed);
-    },
-    { message: "Geçerli bir tarih giriniz (GG.AA.YYYY)" },
-  ),
-  address: z.string().min(5, { message: "Adres en az 5 karakter olmalı." }),
-  phoneNumber: z.string().min(10, { message: "Telefon numarası geçersiz." }),
-  placeType: z.enum(["Müstakil", "Dublex", "Normal Daire", "Villa"], {
-    required_error: "Yer tipi seçiniz.",
-  }),
-  hasPets: z.boolean().default(false),
-  healthCondition: z.string().optional(),
-  children: z.string().optional(),
-  weight: z.number().optional(),
-  notes: z.string().optional(),
-});
-
-type EmployerFormData = z.infer<typeof formSchema>;
 
 export default function EmployerForm() {
   const [isPending, setIsPending] = useState(false);
 
-  const form = useForm<EmployerFormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
     defaultValues: {
       firstName: "",
       lastName: "",
-      birthDate: "",
-      address: "",
-      phoneNumber: "",
-      placeType: undefined,
-      hasPets: false,
+      age: "",
+      placeType: "",
+      occupation: "",
+      requestedJob: "",
+      childrenInfo: "",
+      petsInfo: "",
       healthCondition: "",
-      children: "",
-      weight: 0,
+      cleaningRequests: "",
+      mealRequests: "",
+      insuranceInterest: "",
+      budget: "",
       notes: "",
     },
   });
 
-  const transformFormData = (data: EmployerFormData) => {
+  const transformFormData = (data: any) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        // Check for null
-        if (key === "birthDate" && typeof value === "string") {
-          // Ensure value is a string
-          const [day, month, year] = value.split("."); // Using / as specified
-          formData.append(key, `${year}-${month}-${day}`); // Adjust format here if needed
-        } else if (key === "weight" && value !== null) {
-          formData.append(key, parseFloat(value.toString()).toString()); // Ensure it's a number
-        } else {
-          formData.append(key, value.toString()); // Append other values as string
-        }
+        formData.append(key, value.toString()); // Append all as strings
       }
     });
     return formData;
   };
 
-  const onSubmit = async (data: EmployerFormData) => {
+  const onSubmit = async (data: any) => {
     const formData = transformFormData(data);
     setIsPending(true);
 
@@ -104,7 +62,8 @@ export default function EmployerForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div>
+          {/* First Name */}
           <FormField
             control={form.control}
             name="firstName"
@@ -112,13 +71,14 @@ export default function EmployerForm() {
               <FormItem>
                 <FormLabel>Ad</FormLabel>
                 <FormControl>
-                  <Input placeholder="Adınızı girin" {...field} />
+                  <Textarea placeholder="Adınızı girin" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
+          {/* Last Name */}
           <FormField
             control={form.control}
             name="lastName"
@@ -126,99 +86,108 @@ export default function EmployerForm() {
               <FormItem>
                 <FormLabel>Soyad</FormLabel>
                 <FormControl>
-                  <Input placeholder="Soyadınızı girin" {...field} />
+                  <Textarea placeholder="Soyadınızı girin" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
+          {/* Age */}
           <FormField
             control={form.control}
-            name="birthDate"
+            name="age"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Doğum Tarihi</FormLabel>
+                <FormLabel>Yaş</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="GG.AA.YYYY"
-                    {...field}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, "");
-                      if (value.length > 2 && value.length <= 4) {
-                        value = `${value.slice(0, 2)}.${value.slice(2)}`;
-                      } else if (value.length > 4) {
-                        value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
-                      }
-                      field.onChange(value);
-                    }}
-                  />
+                  <Textarea placeholder="Yaşınızı girin" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefon Numarası</FormLabel>
-                <FormControl>
-                  <Input placeholder="Telefon numaranızı girin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+          {/* Place Type */}
           <FormField
             control={form.control}
             name="placeType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Yer Tipi</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Yer Tipi Seçin" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Müstakil">Müstakil</SelectItem>
-                    <SelectItem value="Dublex">Dublex</SelectItem>
-                    <SelectItem value="Normal Daire">Normal Daire</SelectItem>
-                    <SelectItem value="Villa">Villa</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <Textarea placeholder="Yer tipini girin" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
+          {/* Occupation */}
           <FormField
             control={form.control}
-            name="hasPets"
+            name="occupation"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem>
+                <FormLabel>Meslek</FormLabel>
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                  <Textarea placeholder="Mesleğinizi girin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Requested Job */}
+          <FormField
+            control={form.control}
+            name="requestedJob"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>İstenen İş</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="İstenen iş giriniz" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Children Info */}
+          <FormField
+            control={form.control}
+            name="childrenInfo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Çocuklar Hakkında</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Çocuklar hakkında bilgi" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Pets Info */}
+          <FormField
+            control={form.control}
+            name="petsInfo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Evcil Hayvanlar</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Evcil hayvanlar hakkında bilgi"
+                    {...field}
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Evcil Hayvan Var mı?</FormLabel>
-                </div>
+                <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
+        {/* Health Condition */}
         <FormField
           control={form.control}
           name="healthCondition"
@@ -226,58 +195,9 @@ export default function EmployerForm() {
             <FormItem>
               <FormLabel>Sağlık Durumu</FormLabel>
               <FormControl>
-                <Input placeholder="Sağlık durumunu girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Adres</FormLabel>
-              <FormControl>
-                <Input placeholder="Adresinizi girin" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="children"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Çocuklar</FormLabel>
-              <FormControl>
-                <Input placeholder="Çocuklar hakkında bilgi" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="weight"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kilo</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Kilonuzu girin"
+                <Textarea
+                  placeholder="Sağlık durumu hakkında bilgi"
                   {...field}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value === "" ? "" : Number(e.target.value),
-                    )
-                  }
-                  value={field.value ?? ""}
                 />
               </FormControl>
               <FormMessage />
@@ -285,6 +205,67 @@ export default function EmployerForm() {
           )}
         />
 
+        {/* Cleaning Requests */}
+        <FormField
+          control={form.control}
+          name="cleaningRequests"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Temizlik Talepleri</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Temizlik talepleri" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Meal Requests */}
+        <FormField
+          control={form.control}
+          name="mealRequests"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Yemek Talepleri</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Yemek talepleri" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Insurance Interest */}
+        <FormField
+          control={form.control}
+          name="insuranceInterest"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sigorta İlgisi</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Sigorta ile ilgili bilgi" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Budget */}
+        <FormField
+          control={form.control}
+          name="budget"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bütçe</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Bütçenizi girin" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Notes */}
         <FormField
           control={form.control}
           name="notes"
@@ -292,16 +273,18 @@ export default function EmployerForm() {
             <FormItem>
               <FormLabel>Notlar</FormLabel>
               <FormControl>
-                <Textarea placeholder="Ek notlar" {...field} />
+                <Textarea placeholder="Notlar" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
-          {isPending ? "Ekleniyor..." : "Ekle"}
-        </Button>
+        <div className="flex justify-end space-x-4">
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Gönderiliyor..." : "Gönder"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,12 +17,11 @@ export const columns: ColumnDef<EmployerType>[] = [
     id: "actions",
     cell: ({ row }) => {
       const employerId = row.original._id;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">Açılır menüyü aç</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -68,43 +66,15 @@ export const columns: ColumnDef<EmployerType>[] = [
     cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
   {
-    accessorKey: "birthDate",
+    accessorKey: "age",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Doğum Tarihi
+        Yaş
       </Button>
     ),
-    cell: ({ getValue }) => {
-      const value = getValue<string | Date>();
-      const date = value instanceof Date ? value : new Date(value);
-
-      return (
-        <div>
-          {!isNaN(date.getTime())
-            ? date.toLocaleDateString("tr-TR")
-            : "Geçersiz Tarih"}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "address",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Adres
-      </Button>
-    ),
-    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
-  },
-  {
-    accessorKey: "phoneNumber",
-    header: () => <div>Telefon Numarası</div>,
     cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
   {
@@ -120,16 +90,52 @@ export const columns: ColumnDef<EmployerType>[] = [
     cell: ({ getValue }) => <div>{getValue<string>()}</div>,
   },
   {
-    accessorKey: "hasPets",
+    accessorKey: "occupation",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Evcil Hayvan
+        Meslek
       </Button>
     ),
-    cell: ({ getValue }) => <div>{getValue<boolean>() ? "Evet" : "Hayır"}</div>,
+    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
+  },
+  {
+    accessorKey: "requestedJob",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        İstenen İş
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
+  },
+  {
+    accessorKey: "childrenInfo",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Çocuk Bilgisi
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
+  },
+  {
+    accessorKey: "petsInfo",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Evcil Hayvan Bilgisi
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
   },
   {
     accessorKey: "healthCondition",
@@ -141,41 +147,66 @@ export const columns: ColumnDef<EmployerType>[] = [
         Sağlık Durumu
       </Button>
     ),
-    cell: ({ getValue }) => {
-      const condition = getValue<string | undefined>();
-      return <div>{condition ? condition : "Sağlık durumu yok"}</div>;
-    },
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
   },
   {
-    accessorKey: "children",
+    accessorKey: "cleaningRequests",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Çocuklar
+        Temizlik İstekleri
       </Button>
     ),
-    cell: ({ getValue }) => {
-      const children = getValue<string>();
-      return <div>{children ? children : "Çocuk yok"}</div>;
-    },
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
   },
   {
-    accessorKey: "weight",
+    accessorKey: "mealRequests",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Kilo (kg)
+        Yemek İstekleri
       </Button>
     ),
-    cell: ({ getValue }) => <div>{getValue<number>()}</div>,
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
+  },
+  {
+    accessorKey: "insuranceInterest",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Sigorta İlgisi
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>() || "Bilgi yok"}</div>,
+  },
+  {
+    accessorKey: "budget",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Bütçe
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>() || "Belirtilmemiş"}</div>,
   },
   {
     accessorKey: "notes",
-    header: () => <div>Notlar</div>,
-    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Notlar
+      </Button>
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>() || "Not yok"}</div>,
   },
 ];

@@ -5,6 +5,17 @@ import { EmployerType } from "@/lib/types";
 import Link from "next/link";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts"; // Import the fonts for utf-8 support
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -18,85 +29,85 @@ export default function EmployerActions({
   deleteEmployer,
 }: EmployerActionsProps) {
   // Function to generate the PDF using pdfMake
-  const generatePdf = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const docDefinition: any = {
-      content: [
-        {
-          text: `${employer.firstName} ${employer.lastName} - Detaylar`,
-          style: "header",
-        },
-        {
-          style: "tableExample",
-          table: {
-            widths: ["30%", "70%"],
-            body: [
-              [{ text: "Ad", style: "tableHeader" }, employer.firstName],
-              [{ text: "Soyad", style: "tableHeader" }, employer.lastName],
-              [
-                { text: "Doğum Tarihi", style: "tableHeader" },
-                new Date(employer.birthDate).toLocaleDateString("tr-TR"),
-              ],
-              [{ text: "Adres", style: "tableHeader" }, employer.address],
-              [
-                { text: "Telefon Numarası", style: "tableHeader" },
-                employer.phoneNumber,
-              ],
-              [{ text: "Yer Tipi", style: "tableHeader" }, employer.placeType],
-              [
-                { text: "Evcil Hayvan", style: "tableHeader" },
-                employer.hasPets ? "Evet" : "Hayır",
-              ],
-              [
-                { text: "Sağlık Durumu", style: "tableHeader" },
-                employer.healthCondition,
-              ],
-              [
-                { text: "Çocuklar", style: "tableHeader" },
-                `${employer.children ? employer.children : "Yok"}`,
-              ],
-              [{ text: "Kilo", style: "tableHeader" }, `${employer.weight} kg`],
-            ],
-          },
-        },
-        { text: "Notlar", style: "subheader" },
-        { text: employer.notes, style: "notes" },
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10],
-          color: "#2c3e50",
-        },
-        subheader: {
-          fontSize: 14,
-          bold: true,
-          margin: [0, 10, 0, 5],
-          color: "#34495e",
-        },
-        tableExample: {
-          margin: [0, 5, 0, 15],
-        },
-        tableHeader: {
-          bold: true,
-          color: "#3498db",
-        },
-        notes: {
-          italic: true,
-          margin: [0, 0, 0, 10],
-        },
-      },
-      defaultStyle: {
-        fontSize: 10,
-        color: "#333",
-      },
-    };
+  // const generatePdf = () => {
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   const docDefinition: any = {
+  //     content: [
+  //       {
+  //         text: `${employer.firstName} ${employer.lastName} - Detaylar`,
+  //         style: "header",
+  //       },
+  //       {
+  //         style: "tableExample",
+  //         table: {
+  //           widths: ["30%", "70%"],
+  //           body: [
+  //             [{ text: "Ad", style: "tableHeader" }, employer.firstName],
+  //             [{ text: "Soyad", style: "tableHeader" }, employer.lastName],
+  //             [
+  //               { text: "Doğum Tarihi", style: "tableHeader" },
+  //               new Date(employer.birthDate).toLocaleDateString("tr-TR"),
+  //             ],
+  //             [{ text: "Adres", style: "tableHeader" }, employer.address],
+  //             [
+  //               { text: "Telefon Numarası", style: "tableHeader" },
+  //               employer.phoneNumber,
+  //             ],
+  //             [{ text: "Yer Tipi", style: "tableHeader" }, employer.placeType],
+  //             [
+  //               { text: "Evcil Hayvan", style: "tableHeader" },
+  //               employer.hasPets ? "Evet" : "Hayır",
+  //             ],
+  //             [
+  //               { text: "Sağlık Durumu", style: "tableHeader" },
+  //               employer.healthCondition,
+  //             ],
+  //             [
+  //               { text: "Çocuklar", style: "tableHeader" },
+  //               `${employer.children ? employer.children : "Yok"}`,
+  //             ],
+  //             [{ text: "Kilo", style: "tableHeader" }, `${employer.weight} kg`],
+  //           ],
+  //         },
+  //       },
+  //       { text: "Notlar", style: "subheader" },
+  //       { text: employer.notes, style: "notes" },
+  //     ],
+  //     styles: {
+  //       header: {
+  //         fontSize: 18,
+  //         bold: true,
+  //         margin: [0, 0, 0, 10],
+  //         color: "#2c3e50",
+  //       },
+  //       subheader: {
+  //         fontSize: 14,
+  //         bold: true,
+  //         margin: [0, 10, 0, 5],
+  //         color: "#34495e",
+  //       },
+  //       tableExample: {
+  //         margin: [0, 5, 0, 15],
+  //       },
+  //       tableHeader: {
+  //         bold: true,
+  //         color: "#3498db",
+  //       },
+  //       notes: {
+  //         italic: true,
+  //         margin: [0, 0, 0, 10],
+  //       },
+  //     },
+  //     defaultStyle: {
+  //       fontSize: 10,
+  //       color: "#333",
+  //     },
+  //   };
 
-    pdfMake
-      .createPdf(docDefinition)
-      .download(`${employer.firstName}_${employer.lastName}_detaylar.pdf`);
-  };
+  //   pdfMake
+  //     .createPdf(docDefinition)
+  //     .download(`${employer.firstName}_${employer.lastName}_detaylar.pdf`);
+  // };
 
   // Function to handle form submission and delete the employer
   const handleDeleteEmployer = async () => {
@@ -112,17 +123,35 @@ export default function EmployerActions({
 
   return (
     <div className="mt-10 flex flex-col space-y-5">
-      <Button variant="outline" onClick={generatePdf}>
+      {/* <Button variant="outline" onClick={generatePdf}>
         PDF Oluştur
-      </Button>
+      </Button> */}
       <Button asChild>
         <Link href={`/dashboard/employers/${employer._id}/edit`}>
           Müşteriyi Düzenle
         </Link>
       </Button>
-      <Button variant="destructive" onClick={handleDeleteEmployer}>
-        Müşteriyi Sil
-      </Button>
+
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructive">Musteriyi Sil</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Emin misiniz?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bu işlem geri alınamaz. Bu personel kaydı kalıcı olarak
+              silinecektir.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>İptal</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteEmployer}>
+              Sil
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

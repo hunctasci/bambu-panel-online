@@ -14,29 +14,37 @@ const EmployerDetails = ({ employer }: EmployerDetailsProps) => (
       <strong>Soyad:</strong> {employer.lastName}
     </div>
     <div>
-      <strong>Doğum Tarihi:</strong>{" "}
-      {new Date(employer.birthDate).toLocaleDateString("tr-TR")}
-    </div>
-    <div>
-      <strong>Adres:</strong> {employer.address}
-    </div>
-    <div>
-      <strong>Telefon Numarası:</strong> {employer.phoneNumber}
+      <strong>Yas:</strong> {employer.age}
     </div>
     <div>
       <strong>Yer Tipi:</strong> {employer.placeType}
     </div>
     <div>
-      <strong>Evcil Hayvan:</strong> {employer.hasPets ? "Evet" : "Hayır"}
+      <strong>Meslek:</strong> {employer.occupation}
     </div>
     <div>
-      <strong>Sağlık Durumu:</strong> {employer.healthCondition}
+      <strong>Istenen Is:</strong> {employer.requestedJob}
     </div>
     <div>
-      <strong>Çocuklar:</strong> {employer.children}
+      <strong>Cocuk Bilgisi:</strong> {employer.childrenInfo}
     </div>
     <div>
-      <strong>Kilo:</strong> {employer.weight} kg
+      <strong>Evcil Hayvan Bilgisi:</strong> {employer.petsInfo}
+    </div>
+    <div>
+      <strong>Saglik Durumu:</strong> {employer.healthCondition}
+    </div>
+    <div>
+      <strong>Temizlik Istekleri:</strong> {employer.cleaningRequests}
+    </div>
+    <div>
+      <strong>Yemek Talepleri:</strong> {employer.mealRequests}
+    </div>
+    <div>
+      <strong>Sigorta Ilgisi:</strong> {employer.insuranceInterest}
+    </div>
+    <div>
+      <strong>Butce:</strong> {employer.budget}
     </div>
     <div>
       <strong>Notlar:</strong> {employer.notes}

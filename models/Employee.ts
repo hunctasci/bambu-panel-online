@@ -1,42 +1,23 @@
 import mongoose, { Schema } from "mongoose";
-import { CompetencyOption, EmployeeType } from "@/lib/types";
-
-// Define the competency options
-export const competencyOptions: CompetencyOption[] = [
-  { value: "evIsiElemanlari", label: "Ev İşi Elemanları" },
-  { value: "hastaBakimi", label: "Hasta Bakımı" },
-  { value: "yasliBakimi", label: "Yaşlı Bakımı" },
-  { value: "bebekBakimi", label: "Bebek Bakımı" },
-  { value: "yatalakBakan", label: "Yatalak Hasta Bakımı" },
-  { value: "alzheimerBakan", label: "Alzheimer Hasta Bakımı" },
-  { value: "dadiYeniDogan", label: "Dadı (Yeni Doğan)" },
-  { value: "cocukBakimi", label: "Çocuk Bakımı" },
-  { value: "asci", label: "Aşçı" },
-  { value: "sofor", label: "Şoför" },
-  { value: "oyunAblasi", label: "Oyun Ablası" },
-];
+import { EmployeeType } from "@/lib/types";
 
 const EmployeeSchema = new Schema<EmployeeType>(
   {
-    firstName: { type: String, required: true }, // ad
-    lastName: { type: String, required: true }, // soyad
-    birthDate: { type: Date, required: true }, // dogumTarihi
-    competencies: {
-      type: [String],
-      enum: competencyOptions.map((option) => option.value),
-      required: true,
-    },
-    address: { type: String, required: true }, // adres
-    phoneNumber: { type: String, required: true }, // telefonNumarasi
-    maritalStatus: { type: String, enum: ["Evli", "Bekar"] }, // medeniDurum
-    hasChildren: { type: Boolean, default: false }, // cocukSahibi
-    previousEmployers: { type: String }, // oncekiIsverenler
-    references: { type: String }, // referanslar
-    worksWithPets: { type: Boolean }, // evcilHayvan
-    nationality: { type: String }, // uyruk
-    residencyPermit: { type: Boolean }, // oturumIzni
-    travelRestriction: { type: Boolean }, // seyahatKisitlamasi
-    notes: { type: String }, // notlar
+    firstName: { type: String }, // first name
+    lastName: { type: String }, // last name
+    age: { type: String }, // age (updated to string)
+    address: { type: String }, // address
+    phoneNumber: { type: String }, // phone number
+    maritalStatus: { type: String }, // marital status
+    smoking: { type: String }, // smoking usage
+    residencyPermit: { type: String }, // residency permit
+    experience: { type: String }, // experience
+    competencies: { type: String }, // skills
+    references: { type: String }, // references
+    salaryExpectation: { type: String }, // salary expectation
+    residencyExpectation: { type: String }, // residency expectation
+    preferredDistrict: { type: String }, // preferred district
+    notes: { type: String }, // preferred district
     image: {
       publicId: {
         type: String,
@@ -44,7 +25,7 @@ const EmployeeSchema = new Schema<EmployeeType>(
       url: {
         type: String,
       },
-    },
+    }, // image
   },
   { timestamps: true },
 );

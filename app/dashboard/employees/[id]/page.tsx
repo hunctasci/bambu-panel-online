@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import EmployeeActions from "@/components/Employee/EmployeeActions"; // Import the client component
 import EmployeeDetails from "@/components/Employee/EmployeeDetails";
-import { competencyOptions } from "@/models/Employee";
 
 type Params = {
   params: {
@@ -35,7 +34,6 @@ const SingleEmployeeView = async ({ params }: Params) => {
           <EmployeeDetails employee={employee} />
           <EmployeeActions
             employee={employee}
-            competencyOptions={competencyOptions}
             deleteEmployee={deleteEmployee}
           />
         </CardContent>
