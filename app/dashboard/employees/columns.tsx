@@ -129,6 +129,18 @@ export const columns: ColumnDef<EmployeeType>[] = [
     cell: ({ row }) => <div>{row.getValue<string>("competencies") || "-"}</div>,
   },
   {
+    accessorKey: "petsInfo",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Hayvan Bilgisi
+      </Button>
+    ),
+    cell: ({ row }) => <div>{row.getValue<string>("petsInfo") || "-"}</div>,
+  },
+  {
     accessorKey: "references",
     header: ({ column }) => (
       <Button

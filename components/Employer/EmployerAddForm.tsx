@@ -69,7 +69,7 @@ export default function EmployerForm() {
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ad</FormLabel>
+                <FormLabel>Musterinin Adi Nedir?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Adınızı girin" {...field} />
                 </FormControl>
@@ -84,7 +84,7 @@ export default function EmployerForm() {
             name="lastName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Soyad</FormLabel>
+                <FormLabel>Musterinin Soyadi Nedir?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Soyadınızı girin" {...field} />
                 </FormControl>
@@ -99,7 +99,7 @@ export default function EmployerForm() {
             name="age"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Yaş</FormLabel>
+                <FormLabel>Musterinin Kac Yasinda?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Yaşınızı girin" {...field} />
                 </FormControl>
@@ -114,7 +114,7 @@ export default function EmployerForm() {
             name="placeType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Yer Tipi</FormLabel>
+                <FormLabel>Musteri Nasil Bir Evde Oturuyor?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Yer tipini girin" {...field} />
                 </FormControl>
@@ -129,7 +129,9 @@ export default function EmployerForm() {
             name="occupation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Meslek</FormLabel>
+                <FormLabel>
+                  Musteri Ne Is Yapiyor? Hangi Meslekle Ugrasiyor?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Mesleğinizi girin" {...field} />
                 </FormControl>
@@ -144,7 +146,10 @@ export default function EmployerForm() {
             name="requestedJob"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>İstenen İş</FormLabel>
+                <FormLabel>
+                  Musteri Ne Gibi Isler Yaptirmak Istiyor? Elemandan Beklentisi
+                  Nedir?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="İstenen iş giriniz" {...field} />
                 </FormControl>
@@ -159,7 +164,10 @@ export default function EmployerForm() {
             name="childrenInfo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Çocuklar Hakkında</FormLabel>
+                <FormLabel>
+                  Musterinin Cocugu Var Mi? Varsa Kac Yaslarinda Kac Cocugu Var?
+                  Onlara Bakilsin Istiyor Mu?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Çocuklar hakkında bilgi" {...field} />
                 </FormControl>
@@ -174,7 +182,10 @@ export default function EmployerForm() {
             name="petsInfo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Evcil Hayvanlar</FormLabel>
+                <FormLabel>
+                  Musterinin Evcil Hayvani Var Mi? Varsa Kac Tane? Boyutlari
+                  Nedir? Hayvana Bakilsin Istiyor Mu?
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Evcil hayvanlar hakkında bilgi"
@@ -193,7 +204,10 @@ export default function EmployerForm() {
           name="healthCondition"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sağlık Durumu</FormLabel>
+              <FormLabel>
+                Musterinin Saglik Problemi Var Mi? Kendisine Bakilmasini Istiyor
+                Mu?
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Sağlık durumu hakkında bilgi"
@@ -211,7 +225,9 @@ export default function EmployerForm() {
           name="cleaningRequests"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Temizlik Talepleri</FormLabel>
+              <FormLabel>
+                Musterinin Temizlik Talebi Var Mi? Ne Siklikta Istiyor?
+              </FormLabel>
               <FormControl>
                 <Textarea placeholder="Temizlik talepleri" {...field} />
               </FormControl>
@@ -226,7 +242,10 @@ export default function EmployerForm() {
           name="mealRequests"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Yemek Talepleri</FormLabel>
+              <FormLabel>
+                Musteri Yemek Yapilsin Istiyor Mu? Yemek ile Ilgili Tercihi Var
+                Mi?
+              </FormLabel>
               <FormControl>
                 <Textarea placeholder="Yemek talepleri" {...field} />
               </FormControl>
@@ -241,7 +260,7 @@ export default function EmployerForm() {
           name="insuranceInterest"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sigorta İlgisi</FormLabel>
+              <FormLabel>Musteri Elemana Sigorta Yapmak Istiyor Mu? </FormLabel>
               <FormControl>
                 <Textarea placeholder="Sigorta ile ilgili bilgi" {...field} />
               </FormControl>
@@ -256,7 +275,9 @@ export default function EmployerForm() {
           name="budget"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bütçe</FormLabel>
+              <FormLabel>
+                Musterinin Elemanin Maasi icin Butcesi Nedir?
+              </FormLabel>
               <FormControl>
                 <Textarea placeholder="Bütçenizi girin" {...field} />
               </FormControl>
@@ -271,7 +292,7 @@ export default function EmployerForm() {
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notlar</FormLabel>
+              <FormLabel>Musteri ile Ilgili Notlarinizi Girin</FormLabel>
               <FormControl>
                 <Textarea placeholder="Notlar" {...field} />
               </FormControl>

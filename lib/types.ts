@@ -16,6 +16,7 @@ export interface EmployeeType {
   residencyPermit?: string; // residency permit
   experience?: string; // experience
   competencies?: string; // skills
+  petsInfo?: string; // Pets Info
   references?: string; // references
   salaryExpectation?: string; // salary expectation
   residencyExpectation?: string; // residency expectation

@@ -65,6 +65,7 @@ const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
               label="Yeterlilikler"
               value={employee.competencies || ""}
             />
+            <InfoItem label="Hayvan Bilgisi" value={employee.petsInfo || ""} />
             <InfoItem label="Referanslar" value={employee.references || ""} />
             <InfoItem
               label="Maaş Beklentisi"

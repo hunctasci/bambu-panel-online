@@ -93,20 +93,49 @@ export default function EmployerEditForm({ employer }: EmployerEditFormProps) {
   };
 
   const formFields = [
-    { name: "firstName", label: "Ad" },
-    { name: "lastName", label: "Soyad" },
-    { name: "age", label: "Yaş" },
-    { name: "placeType", label: "Yer Tipi" },
-    { name: "occupation", label: "Meslek" },
-    { name: "requestedJob", label: "İstenen İş" },
-    { name: "childrenInfo", label: "Çocuk Bilgisi" },
-    { name: "petsInfo", label: "Evcil Hayvan Bilgisi" },
-    { name: "healthCondition", label: "Sağlık Durumu" },
-    { name: "cleaningRequests", label: "Temizlik İstekleri" },
-    { name: "mealRequests", label: "Yemek İstekleri" },
-    { name: "insuranceInterest", label: "Sigorta İlgisi" },
-    { name: "budget", label: "Bütçe" },
-    { name: "notes", label: "Notlar" },
+    { name: "firstName", label: "Musterinin Adi Nedir?" },
+    { name: "lastName", label: "Musterinin Soyadi Nedir?" },
+    { name: "age", label: "Musterinin Kac Yasinda?" },
+    { name: "placeType", label: "Musteri Nasil Bir Evde Oturuyor?" },
+    {
+      name: "occupation",
+      label: "Musteri Ne Is Yapiyor? Hangi Meslekle Ugrasiyor?",
+    },
+    {
+      name: "requestedJob",
+      label:
+        "Musteri Ne Gibi Isler Yaptirmak Istiyor? Elemandan Beklentisi Nedir?",
+    },
+    {
+      name: "childrenInfo",
+      label:
+        "Musterinin Cocugu Var Mi? Varsa Kac Yaslarinda Kac Cocugu Var? Onlara Bakilsin Istiyor Mu?",
+    },
+    {
+      name: "petsInfo",
+      label:
+        "Musterinin Evcil Hayvani Var Mi? Varsa Kac Tane? Boyutlari Nedir? Hayvana Bakilsin Istiyor Mu?",
+    },
+    {
+      name: "healthCondition",
+      label:
+        "Musterinin Saglik Problemi Var Mi? Kendisine Bakilmasini Istiyor Mu?",
+    },
+    {
+      name: "cleaningRequests",
+      label: "Musterinin Temizlik Talebi Var Mi? Ne Siklikta Istiyor?",
+    },
+    {
+      name: "mealRequests",
+      label:
+        "Musteri Yemek Yapilsin Istiyor Mu? Yemek ile Ilgili Tercihi Var Mi?",
+    },
+    {
+      name: "insuranceInterest",
+      label: "Musteri Elemana Sigorta Yapmak Istiyor Mu?",
+    },
+    { name: "budget", label: "Musterinin Elemanin Maasi icin Butcesi Nedir?" },
+    { name: "notes", label: "Musteri ile Ilgili Notlarinizi Girin" },
   ];
 
   return (

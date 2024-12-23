@@ -13,6 +13,7 @@ const EmployeeSchema = new Schema<EmployeeType>(
     residencyPermit: { type: String }, // residency permit
     experience: { type: String }, // experience
     competencies: { type: String }, // skills
+    petsInfo: { type: String }, // skills
     references: { type: String }, // references
     salaryExpectation: { type: String }, // salary expectation
     residencyExpectation: { type: String }, // residency expectation

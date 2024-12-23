@@ -39,6 +39,7 @@ export default function EmployeeForm() {
       residencyPermit: "",
       experience: "",
       competencies: "",
+      petsInfo: "",
       references: "",
       salaryExpectation: "",
       residencyExpectation: "",
@@ -84,7 +85,7 @@ export default function EmployeeForm() {
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ad</FormLabel>
+                  <FormLabel>Personelin Ismi Nedir?</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Ad girin" {...field} />
                   </FormControl>
@@ -97,7 +98,7 @@ export default function EmployeeForm() {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Soyad</FormLabel>
+                  <FormLabel>Personelin Soyadi Nedir?</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Soyad girin" {...field} />
                   </FormControl>
@@ -110,7 +111,7 @@ export default function EmployeeForm() {
               name="age"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Yaş</FormLabel>
+                  <FormLabel>Personel Kac Yasinda?</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Yaş girin" {...field} />
                   </FormControl>
@@ -127,7 +128,9 @@ export default function EmployeeForm() {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Adres</FormLabel>
+                  <FormLabel>
+                    Personel Nerede Oturuyor? Adresi Nedir? Nerede Oturuyor?
+                  </FormLabel>
                   <FormControl>
                     <Textarea placeholder="Adres girin" {...field} />
                   </FormControl>
@@ -140,7 +143,7 @@ export default function EmployeeForm() {
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Telefon Numarası</FormLabel>
+                  <FormLabel>Personelin Telefon Numarasi</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Telefon Numarası girin" {...field} />
                   </FormControl>
@@ -153,7 +156,9 @@ export default function EmployeeForm() {
               name="maritalStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Medeni Durum</FormLabel>
+                  <FormLabel>
+                    Personel Evli mi? Cocugu Var Mi? Varsa Kac Yasinda?
+                  </FormLabel>
                   <FormControl>
                     <Textarea placeholder="Medeni Durum girin" {...field} />
                   </FormControl>
@@ -166,7 +171,7 @@ export default function EmployeeForm() {
               name="smoking"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sigara Kullanımı</FormLabel>
+                  <FormLabel>Personel Sigara iciyor Mu?</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Sigara kullanımı hakkında bilgi girin"
@@ -183,7 +188,7 @@ export default function EmployeeForm() {
             name="residencyPermit"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Oturma Izni</FormLabel>
+                <FormLabel>Personelin Oturma Izni Var Mi</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Oturma Izni bilgisi girin"
@@ -199,7 +204,7 @@ export default function EmployeeForm() {
             name="experience"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Deneyim</FormLabel>
+                <FormLabel>Personelin Daha Onceki Deneyimleri Nedir?</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Deneyiminiz hakkında bilgi girin"
@@ -215,9 +220,27 @@ export default function EmployeeForm() {
             name="competencies"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Beceriler</FormLabel>
+                <FormLabel>
+                  Personel Neler Yapabiliyor? Becerileri Neler?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Becerileri girin" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="petsInfo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Personel Evcil Hayvan Olan Evde Calisir Mi? Hayvan Bakmayi
+                  Biliyor Mu?
+                </FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Evcil Hayvan Bilgisi" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -228,7 +251,9 @@ export default function EmployeeForm() {
             name="references"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Referanslar</FormLabel>
+                <FormLabel>
+                  Personelin Referansi Var Mi? Tavsiye Eden Biri Var Mi?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Referanslari girin" {...field} />
                 </FormControl>
@@ -244,7 +269,7 @@ export default function EmployeeForm() {
             name="salaryExpectation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ucret Beklentisi</FormLabel>
+                <FormLabel>Personel Ne Kadar Maas Istiyor?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Ucret Beklentisi girin" {...field} />
                 </FormControl>
@@ -257,7 +282,10 @@ export default function EmployeeForm() {
             name="residencyExpectation"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Oturum Beklentisi</FormLabel>
+                <FormLabel>
+                  Personel Oturum Iznine Ihtiyac Duyuyor Mu? Yatili Calismak
+                  Istiyor Mu?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Oturum Beklentisi girin" {...field} />
                 </FormControl>
@@ -274,7 +302,9 @@ export default function EmployeeForm() {
             name="preferredDistrict"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bolge Tercihi</FormLabel>
+                <FormLabel>
+                  Personel Nerede Calismak Istiyor? Semt Tercihi Var Mi?
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Bolge Tercihi girin" {...field} />
                 </FormControl>
@@ -288,7 +318,7 @@ export default function EmployeeForm() {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notlar</FormLabel>
+                <FormLabel>Personel Ile Ilgili Notlariniz Neler?</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Notlar girin" {...field} />
                 </FormControl>
@@ -304,7 +334,7 @@ export default function EmployeeForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Fotoğraf</FormLabel>
+              <FormLabel>Fotoğraf Ekleyin?</FormLabel>
               <FormControl>
                 <Input
                   type="file"

@@ -181,6 +181,7 @@ export const addEmployee = async (formData: FormData) => {
       residencyPermit: data.residencyPermit || "", // residency permit
       experience: data.experience || "", // experience
       competencies: data.competencies || "", // competencies
+      petsInfo: data.petsInfo || "", // petsInfo
       references: data.references || "", // references
       salaryExpectation: data.salaryExpectation || "", // salary expectation
       residencyExpectation: data.residencyExpectation || "", // residency expectation
